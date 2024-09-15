@@ -1,20 +1,29 @@
+import { Suspense } from "react";
+import { MsalProvider } from "@azure/msal-react";
+import { pca } from "@configs/msal.config";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { NavigationRoutes } from "@routes/index";
+import { MainLayout } from "@layouts/index";
+
 function App() {
   return (
-    <section className="w-screen h-screen bg-red-200">
-      <div className="w-full h-full">
-        <a
-          href="https://binusianorg-my.sharepoint.com/personal/christopher_silitonga_binus_ac_id/_layouts/15/guestaccess.aspx?share=EaW86YYYGYZEkt5fV-6Dt8ABheZpH2H6U_abU9TmX7w2WA&e=hD5YfY&action=edit"
-          target="_blank"
-        >
-          <button>Edit in Excel Online</button>
-        </a>
-        <iframe
-          width="100%"
-          height="100%"
-          src="https://binusianorg-my.sharepoint.com/personal/christopher_silitonga_binus_ac_id/_layouts/15/guestaccess.aspx?share=EaW86YYYGYZEkt5fV-6Dt8ABheZpH2H6U_abU9TmX7w2WA&e=ppfSqp&action=embedview&AllowTyping=True&wdInConfigurator=True&wdInConfigurator=True"
-        ></iframe>
-      </div>
-    </section>
+    <MsalProvider instance={pca}>
+      <MainLayout>
+        <Router>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              {NavigationRoutes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={<route.component />}
+                />
+              ))}
+            </Routes>
+          </Suspense>
+        </Router>
+      </MainLayout>
+    </MsalProvider>
   );
 }
 
